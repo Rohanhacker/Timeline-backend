@@ -14,8 +14,10 @@ class PostsController < ApplicationController
   def show
     id = params['id']
     if id.present?
-      @posts = Post.where('recipient_id', id)
-      render json: @posts
+      @posts = Post.where('recipient_id', id).order('created_at DESC').includes(:comments, :user)
+      render json: @posts.as_json(include: [:user, comments: {
+         include: :user
+      }])
     else
       render json: { error: 'not-found' }.to_json, status: :not_found
     end

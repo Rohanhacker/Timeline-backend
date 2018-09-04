@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :update, :destroy]
+  before_action :set_post, only: %i[show update destroy]
 
   # GET /posts
   def index
@@ -10,7 +12,13 @@ class PostsController < ApplicationController
 
   # GET /posts/1
   def show
-    render json: @post
+    id = params['id']
+    if id.present?
+      @posts = Post.where('recipient_id', id)
+      render json: @posts
+    else
+      render json: { error: 'not-found' }.to_json, status: :not_found
+    end
   end
 
   # POST /posts
@@ -39,13 +47,14 @@ class PostsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_post
-      @post = Post.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def post_params
-      params.require(:post).permit(:message, :recipient_id, :user_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_post
+    @post = Post.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def post_params
+    params.require(:post).permit(:message, :recipient_id, :user_id)
+  end
 end

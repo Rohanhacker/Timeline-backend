@@ -9,7 +9,7 @@ https://cl.ly/cb4c6f18ee09
 
 ## Installation
 
-Postgres, rails 5 and ruby 2.5.1 should be installed
+Postgres, rails 5, redis and ruby 2.5.1 should be installed
 
 ### Set up Rails app
 

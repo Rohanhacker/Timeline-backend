@@ -14,7 +14,11 @@ class PostsController < ApplicationController
   def show
     id = params['id']
     if id.present?
-      @posts = Post.where('recipient_id', id).order('created_at DESC').includes(:comments, :user)
+      @user = User.find(id)
+      if @user.blank?
+        render json: { error: 'not-found' }.to_json, status: :not_found
+      end
+      @posts = Post.where('recipient_id = ?', id).order('created_at DESC').includes(:comments, :user)
       render json: @posts.as_json(include: [:user, comments: {
          include: :user
       }])
@@ -28,7 +32,7 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     if @post.save
-      render json: @post, status: :created, location: @post
+      render json: @post.as_json(include: [:user, :comments]), status: :created, location: @post
     else
       render json: @post.errors, status: :unprocessable_entity
     end

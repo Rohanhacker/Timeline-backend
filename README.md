@@ -23,3 +23,6 @@ Next, execute the database migrations/schema setup:
 
 Start server at port 5000:
 	rails s -p 5000
+
+## Frontend
+https://github.com/Rohanhacker/Timeline-frontend
